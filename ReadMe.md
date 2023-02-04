@@ -22,3 +22,4 @@ Para rodar a redução do problema de Open Pit Mining para o problema do Fluxo M
 python opm.py 'filename' < 'path_to_instance.ins'
 
 opm.py salvará o arquivo 'filename'.pbm contendo a solução da instância do problema na pasta solutions. O algoritmo não converte a imagem da solução para .png
+Além disso, opm.py utiliza a biblioteca NetworkX (https://networkx.org/), sendo necessário sua instalação para conseguir rodar o código.
