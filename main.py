@@ -1,5 +1,5 @@
 from graph import *
 
 g = Graph()
-g.read_file()
+g.from_input()
 print(g.push_and_relabel())

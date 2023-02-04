@@ -20,6 +20,7 @@ class Edge:
         self.node_to = node_to
         self.capacity = capacity
         self.residual = residual
+        self.max_capacity = deepcopy(capacity)
 
     def push(self, flow:int):
         self.capacity -= flow
@@ -31,7 +32,7 @@ class Edge:
             self.capacity = 0
     
     def __str__(self) -> str:
-        return '[ {} ] -> [ {} ], c={}'.format(self.node_from, self.node_to,self.capacity)
+        return '[ {} ] -> [ {} ], c={}, mc={}'.format(self.node_from, self.node_to,self.capacity, self.max_capacity)
 
 class AdjList:
     def __init__(self, num_vertex) -> None:
@@ -82,7 +83,7 @@ class Graph:
         self.queue = []
 
     # OK
-    def read_file(self):
+    def from_input(self):
         # get problem
         splited_line = get_line('p')
         self.problem_type, self.num_vertex, self.num_edges = splited_line[1], int(splited_line[2]), int(splited_line[3])
@@ -96,7 +97,25 @@ class Graph:
             u, v, c = int(splited_line[1]), int(splited_line[2]), int(splited_line[3])
             edge = Edge(self.vertex[u-1], self.vertex[v-1], c)
             self.network.add_edge(self.vertex[u-1],self.vertex[v-1],edge)
-        
+    
+    def read_file(self, filename):
+        with open(filename) as f:
+            for line in f.readlines():
+                splited_line = line.split(' ')
+                if line[0] == 'p':
+                    self.problem_type, self.num_vertex, self.num_edges = splited_line[1], int(splited_line[2]), int(splited_line[3])
+                    self.network = AdjList(self.num_vertex)
+                    self.vertex = [Vertex(i+1) for i in range(self.num_vertex)]
+                elif line[0] == 'n':
+                    if splited_line[2] == 's':
+                        self.source = int(splited_line[1])
+                    else:
+                        self.sink = int(splited_line[1])
+                elif line[0] == 'a':
+                    u, v, c = int(splited_line[1]), int(splited_line[2]), int(splited_line[3])
+                    edge = Edge(self.vertex[u-1], self.vertex[v-1], c)
+                    self.network.add_edge(self.vertex[u-1],self.vertex[v-1],edge)
+
 
     def get_source_and_sink(self):
         for i in range(2):
@@ -163,7 +182,6 @@ class Graph:
                         break
                 if not pushed:
                     self.relabel(overflowing_vertex)
-                    
             self.queue = sorted([vertex for vertex in self.queue if vertex.excess > 0 and not vertex.node == self.source and not vertex.node == self.sink], key= lambda vertex: (vertex.height, vertex.excess))
         maxflow = self.vertex[self.sink-1].excess
         delta_t = time.time() - start_t
