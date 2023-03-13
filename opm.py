@@ -40,15 +40,18 @@ def opm_to_flow():
     cut_value, partition = nx.minimum_cut(g, str(source), str(sink))
     reachable, non_reachable = partition
     selected = []
+    s = []
     for row in range(height):
         line = []
         for column in range(width):
             v = (row*width) + column + 1
             if not v == source and not v == sink and str(v) in reachable:
+                s.append(costs[row][column])
                 line.append(1)
             else:
                 line.append(0)
         selected.append(line)
+    print(sum(s))
     solutions_file = 'opm/solutions/' + filename + '.pbm'
     with open(solutions_file, 'w') as f:
         f.write('P1\n# '+filename+'\n')
