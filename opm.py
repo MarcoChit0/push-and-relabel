@@ -3,10 +3,10 @@ import sys
 import networkx as nx
 
 def opm_to_flow():
-    filename = sys.argv[1]
     args = input().split(' ')
     width = int(args[0])
     height = int(args[1])
+    filename = 'w' + args[0] + '_h' + args[1] 
     costs = []
     max_cost = 1
     # linhas
